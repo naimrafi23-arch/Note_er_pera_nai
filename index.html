@@ -91,6 +91,7 @@ label.lbl{display:block;font-size:11px;font-family:'DM Mono',monospace;color:var
 .tbox:empty::before{content:'Compile all segments to see the full transcript…';color:var(--muted);font-style:italic}
 .tbox::-webkit-scrollbar{width:5px}.tbox::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 .ccount{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-align:right;margin-top:5px}
+.tbox#summaryBox {border-color:var(--accent2); background:rgba(247,162,106,.05); margin-top:14px;}
 .oactions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
 .smsg{font-family:'DM Mono',monospace;font-size:12px;padding:8px 13px;border-radius:6px;margin-top:10px;display:none}
 .smsg.on{display:block}
@@ -219,7 +220,7 @@ label.lbl{display:block;font-size:11px;font-family:'DM Mono',monospace;color:var
   </div>
   <div class="tbox" id="tbox" contenteditable="true" spellcheck="false"></div>
   <div class="ccount" id="ccount"></div>
-  <div class="tbox" id="summaryBox" style="display:none; margin-top:14px; border-color:var(--accent2); background:rgba(247,162,106,.05)"></div>
+  <div class="tbox" id="summaryBox" style="display:none"></div>
   <div id="outStatus" class="smsg"></div>
   <div class="oactions" id="oactions" style="display:none">
     <button class="btn btn-p" onclick="sendEmail()">📧 Send to Email</button>
@@ -247,7 +248,7 @@ label.lbl{display:block;font-size:11px;font-family:'DM Mono',monospace;color:var
 // ══════════════════════════════════════════════
 // STATE & GEMINI API KEY
 // ══════════════════════════════════════════════
-const GEMINI_API_KEY = "AIzaSyD6k1k-APo1M06FB94YRX8H5Acqk8mlWLc";
+const GEMINI_API_KEY = "AIzaSyD6k1k-APo1M06FB94YRX8H5Acqk8mlWLc"; // Using the key you provided
 
 let recog            = null;
 let isRecording      = false;
@@ -461,7 +462,7 @@ async function saveSegment(){
 }
 
 async function fixBanglish(raw){
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -535,7 +536,7 @@ async function transcribeUpload(){
       : `Transcribe this audio accurately in ${currentLangLabel}. Output clean flowing sentences. No timestamps.`;
 
     setProg(true,60,'Transcribing…');
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -628,7 +629,7 @@ async function summarizeTranscript(){
   showS('outStatus','⏳ Summarizing with Gemini...','inf');
   
   try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
